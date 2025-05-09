@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Access: Finance Provider Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Gray-50 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem; 
+            margin-bottom: 1.5rem; 
+        }
+        .kpi-card {
+            background-color: #fff7ed; /* Orange-50 */
+            border: 1px solid #fed7aa; /* Orange-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* 28px */
+            font-weight: 700;
+            color: #ea580c; /* Orange-600 */
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* 14px */
+            color: #9a3412; /* Orange-800 */
+        }
+        .kpi-trend {
+            font-size: 0.75rem; /* 12px */
+            margin-top: 0.25rem; /* 4px */
+        }
+        .button-primary {
+            background-color: #f97316; /* Orange-500 */
+            color: white;
+            font-weight: 600;
+            padding: 0.625rem 1.25rem; /* Adjusted padding */
+            border-radius: 0.5rem; 
+            transition: background-color 0.3s ease;
+            font-size: 0.875rem; /* 14px */
+        }
+        .button-primary:hover {
+            background-color: #ea580c; /* Orange-600 */
+        }
+        .button-secondary {
+            background-color: #fed7aa; /* Orange-200 */
+            color: #c2410c; /* Orange-700 */
+            font-weight: 500;
+            padding: 0.625rem 1.25rem; /* Adjusted padding */
+            border-radius: 0.5rem; 
+            border: 1px solid #fdba74; /* Orange-300 */
+            transition: background-color 0.3s ease;
+            font-size: 0.875rem; /* 14px */
+        }
+        .button-secondary:hover {
+            background-color: #fdba74; /* Orange-300 */
+        }
+        .icon {
+            font-size: 1.5rem; 
+            margin-right: 0.75rem; 
+        }
+        .header {
+            background-color: #ea580c; /* Orange-600 */
+            color: white;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 1.5rem; 
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .data-table {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem; /* 12px 16px */
+            text-align: left;
+            font-size: 0.875rem; /* 14px */
+            border-bottom: 1px solid #e5e7eb; /* Gray-200 */
+        }
+        .data-table th {
+            background-color: #f9fafb; /* Gray-50 */
+            font-weight: 600;
+            color: #374151; /* Gray-700 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .data-table tbody tr:hover {
+            background-color: #fffbeb; /* Yellow-50 for hover */
+        }
+        .status-active { color: #059669; background-color: #d1fae5; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        .status-at-risk { color: #d97706; background-color: #fef3c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        .status-overdue { color: #dc2626; background-color: #fee2e2; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        .status-completed { color: #52525b; background-color: #e4e4e7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem; /* 12px */
+            margin-bottom: 1rem; /* 16px */
+        }
+        .filter-bar input, .filter-bar select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 0.375rem; /* 6px */
+            font-size: 0.875rem;
+        }
+
+        /* KPI Grid adjustments */
+        .kpi-grid {
+            grid-template-columns: repeat(1, 1fr); /* Default to 1 column */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .kpi-grid {
+                grid-template-columns: repeat(4, 1fr); /* 4 columns on large screens for first row */
+            }
+            /* For the second row of KPIs if needed, or adjust the main one */
+             .kpi-grid-secondary {
+                grid-template-columns: repeat(1, 1fr);
+            }
+             @media (min-width: 640px) {
+                .kpi-grid-secondary {
+                    grid-template-columns: repeat(3, 1fr); /* 3 columns for the second row on sm+ */
+                }
+            }
+        }
+
+
+        /* Mobile specific adjustments */
+        @media (max-width: 639px) { /* Max sm breakpoint */
+            .card { padding: 1rem; }
+            .header { padding: 0.75rem 1rem; }
+            .header h1 { font-size: 1.25rem; }
+            .logo-svg { width: 28px; height: 28px; }
+            .button-primary, .button-secondary { width: 100%; margin-bottom: 0.5rem; }
+            .filter-bar { flex-direction: column; }
+            .filter-bar input, .filter-bar select { width: 100%; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen">
+        <div class="header">
+            <div class="container mx-auto flex justify-between items-center w-full">
+                <div class="flex items-center">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10ZM50 75C36.1929 75 25 63.8071 25 50C25 36.1929 36.1929 25 50 25C63.8071 25 75 36.1929 75 50C75 63.8071 63.8071 75 50 75Z"/>
+                        <path d="M50 40L65 60H35L50 40Z" />
+                    </svg>
+                    <h1>Agri-Access</h1>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm mr-3 hidden sm:inline">Finance Provider Portal</span>
+                    <i class="ph ph-user-circle text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto p-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-3 sm:mb-0">Portfolio & Application Overview</h2>
+                <button class="button-primary">
+                    <i class="ph ph-plus-circle mr-1"></i> Add New Loan Application
+                </button>
+            </div>
+
+            <div class="grid gap-4 mb-6 kpi-grid">
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-scales text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Total Portfolio Value</p>
+                        </div>
+                        <p class="kpi-value">ZMW 12.5M</p>
+                    </div>
+                    <p class="kpi-trend text-green-600">+2.5% this month</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-users text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Active Loans</p>
+                        </div>
+                        <p class="kpi-value">350</p>
+                    </div>
+                    <p class="kpi-trend text-gray-500">12 new this week</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-chart-line-down text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Portfolio At Risk (PAR > 30d)</p>
+                        </div>
+                        <p class="kpi-value">3.2%</p>
+                    </div>
+                    <p class="kpi-trend text-red-600">Target: &lt; 2.0%</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-money text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Average Loan Size</p>
+                        </div>
+                        <p class="kpi-value">ZMW 35,714</p>
+                    </div>
+                    <p class="kpi-trend text-gray-500">Stable</p>
+                </div>
+            </div>
+            <div class="grid gap-4 mb-6 kpi-grid kpi-grid-secondary">
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-files text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Total Applications (MTD)</p>
+                        </div>
+                        <p class="kpi-value">78</p>
+                    </div>
+                    <p class="kpi-trend text-gray-500">+5 from last week</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-check-circle text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Approval Rate (MTD)</p>
+                        </div>
+                        <p class="kpi-value">65%</p>
+                    </div>
+                    <p class="kpi-trend text-green-600">Up from 62% last month</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-x-circle text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Declined Applications (MTD)</p>
+                        </div>
+                        <p class="kpi-value">27</p> </div>
+                    <p class="kpi-trend text-gray-500">Main reason: Incomplete docs</p>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 sm:mb-0">Loan Portfolio Details</h3>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="Search by Farmer Name or Loan ID..." class="sm:w-auto w-full">
+                        <select class="sm:w-auto w-full">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="at_risk">At Risk</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending_approval">Pending Approval</option>
+                        </select>
+                        <button class="button-secondary py-2 px-3"><i class="ph ph-funnel-simple"></i> Filter</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Loan ID</th>
+                                <th>Farmer Name</th>
+                                <th>Asset Type</th>
+                                <th>Amount (ZMW)</th>
+                                <th>Next Payment / App Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AA-ZM-00123</td>
+                                <td>Kofi Mensah</td>
+                                <td>Tractor MF375</td>
+                                <td>485,000</td>
+                                <td>2025-05-25</td>
+                                <td><span class="status-active">Active</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>APP-ZM-00450</td>
+                                <td>Bupe Nkonde</td>
+                                <td>Solar Panel Kit</td>
+                                <td>65,000</td>
+                                <td>2025-05-08 (App)</td>
+                                <td><span class="status-at-risk">Pending Approval</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">Review App</a></td>
+                            </tr>
+                            <tr>
+                                <td>AA-ZM-00245</td>
+                                <td>Thandiwe Banda</td>
+                                <td>Solar Pump</td>
+                                <td>80,000</td>
+                                <td>2025-05-15</td>
+                                <td><span class="status-at-risk">At Risk</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>AA-ZM-00088</td>
+                                <td>Chileshe Mwape</td>
+                                <td>Tractor (Used)</td>
+                                <td>250,000</td>
+                                <td>2025-04-30 (Overdue)</td>
+                                <td><span class="status-overdue">Overdue</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>AA-ZM-00012</td>
+                                <td>Memory Zulu</td>
+                                <td>Irrigation Kit</td>
+                                <td>45,000</td>
+                                <td>-</td>
+                                <td><span class="status-completed">Completed</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                             <tr>
+                                <td>AA-ZM-00301</td>
+                                <td>John Phiri</td>
+                                <td>Tractor MF375</td>
+                                <td>485,000</td>
+                                <td>2025-06-01</td>
+                                <td><span class="status-active">Active</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                             <tr>
+                                <td>AA-ZM-00305</td>
+                                <td>Esther Tembo</td>
+                                <td>Sheller</td>
+                                <td>60,000</td>
+                                <td>2025-05-20</td>
+                                <td><span class="status-active">Active</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                          Previous
+                        </a>
+                        <a href="#" aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 border border-orange-500 bg-orange-50 text-sm font-medium text-orange-600">1</a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                          Next
+                        </a>
+                      </nav>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Quick Reports</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="#" class="block p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition">
+                        <div class="flex items-center mb-2">
+                            <i class="ph ph-file-text text-orange-600 text-xl mr-2"></i>
+                            <h4 class="font-semibold text-orange-700">Disbursement Report</h4>
+                        </div>
+                        <p class="text-xs text-gray-600">View all disbursements for a selected period.</p>
+                    </a>
+                    <a href="#" class="block p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition">
+                        <div class="flex items-center mb-2">
+                            <i class="ph ph-chart-bar text-orange-600 text-xl mr-2"></i>
+                            <h4 class="font-semibold text-orange-700">Collections Performance</h4>
+                        </div>
+                        <p class="text-xs text-gray-600">Track repayment rates and trends.</p>
+                    </a>
+                    <a href="#" class="block p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition">
+                        <div class="flex items-center mb-2">
+                             <i class="ph ph-warning-octagon text-orange-600 text-xl mr-2"></i>
+                            <h4 class="font-semibold text-orange-700">Risk Analysis</h4>
+                        </div>
+                        <p class="text-xs text-gray-600">Identify high-risk loans and segments.</p>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="text-center py-8 text-sm text-gray-500 border-t border-gray-200 mt-8">
+            &copy; 2025 Agri-Access Zambia. All rights reserved. <br>
+            Finance Provider Portal
+        </footer>
+    </div>
+
+    <script>
+        // Placeholder for any future JavaScript interactions
+        console.log("Finance Provider Dashboard Loaded - KPI Update");
+    </script>
+</body>
+</html>
