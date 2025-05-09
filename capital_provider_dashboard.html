@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Access: Capital Provider Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Gray-50 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem; 
+            margin-bottom: 1.5rem; 
+        }
+        .kpi-card {
+            background-color: #fff7ed; /* Orange-50 */
+            border: 1px solid #fed7aa; /* Orange-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .kpi-value {
+            font-size: 1.75rem; /* 28px */
+            font-weight: 700;
+            color: #ea580c; /* Orange-600 */
+        }
+        .kpi-label {
+            font-size: 0.875rem; /* 14px */
+            color: #9a3412; /* Orange-800 */
+        }
+        .kpi-trend {
+            font-size: 0.75rem; /* 12px */
+            margin-top: 0.25rem; /* 4px */
+        }
+        .button-primary { 
+            background-color: #f97316; 
+            color: white;
+            font-weight: 600;
+            padding: 0.625rem 1.25rem; 
+            border-radius: 0.5rem; 
+            transition: background-color 0.3s ease;
+            font-size: 0.875rem; 
+        }
+        .button-primary:hover {
+            background-color: #ea580c; 
+        }
+        .icon {
+            font-size: 1.5rem; 
+            margin-right: 0.75rem; 
+        }
+        .header {
+            background-color: #ea580c; /* Orange-600 */
+            color: white;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 1.5rem; 
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .data-table {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem; 
+            text-align: left;
+            font-size: 0.875rem; 
+            border-bottom: 1px solid #e5e7eb; /* Gray-200 */
+        }
+        .data-table th {
+            background-color: #f9fafb; /* Gray-50 */
+            font-weight: 600;
+            color: #374151; /* Gray-700 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .data-table tbody tr:hover {
+            background-color: #fffbeb; /* Yellow-50 for hover */
+        }
+        .status-performing { color: #059669; background-color: #d1fae5; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        .status-watch { color: #d97706; background-color: #fef3c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        .status-underperforming { color: #dc2626; background-color: #fee2e2; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; display: inline-block; }
+        
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem; 
+            margin-bottom: 1rem; 
+        }
+        .filter-bar select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 0.375rem; /* 6px */
+            font-size: 0.875rem;
+        }
+        .report-link {
+            display: block;
+            padding: 1rem; 
+            background-color: #fff7ed; /* Orange-50 */
+            border: 1px solid #fed7aa; /* Orange-200 */
+            color: #c2410c; /* Orange-700 */
+            border-radius: 0.5rem; /* 8px */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 500;
+            text-align: center;
+        }
+        .report-link:hover {
+            background-color: #fed7aa; /* Orange-200 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .report-link i {
+            display: block;
+            font-size: 1.75rem; 
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-grid {
+            grid-template-columns: repeat(1, 1fr); 
+        }
+        @media (min-width: 640px) { 
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+        @media (min-width: 1024px) { 
+            .kpi-grid {
+                grid-template-columns: repeat(4, 1fr); 
+            }
+        }
+
+        @media (max-width: 639px) { 
+            .card { padding: 1rem; }
+            .header { padding: 0.75rem 1rem; }
+            .header h1 { font-size: 1.25rem; }
+            .logo-svg { width: 28px; height: 28px; }
+            .filter-bar { flex-direction: column; }
+            .filter-bar select { width: 100%; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen">
+        <div class="header">
+            <div class="container mx-auto flex justify-between items-center w-full">
+                <div class="flex items-center">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10ZM50 75C36.1929 75 25 63.8071 25 50C25 36.1929 36.1929 25 50 25C63.8071 25 75 36.1929 75 50C75 63.8071 63.8071 75 50 75Z"/>
+                        <path d="M50 40L65 60H35L50 40Z" />
+                    </svg>
+                    <h1>Agri-Access</h1>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm mr-3 hidden sm:inline">Capital Provider Portal</span>
+                    <i class="ph ph-user-circle text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto p-4">
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Pan-African Investment & Impact Overview</h2>
+            </div>
+
+            <div class="grid gap-4 mb-6 kpi-grid">
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-bank text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Total Capital Deployed</p>
+                        </div>
+                        <p class="kpi-value">USD 75M</p> </div>
+                    <p class="kpi-trend text-gray-500">Across multiple African regions</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-trend-up text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Overall Blended Return (YTD)</p>
+                        </div>
+                        <p class="kpi-value">8.2%</p> </div>
+                    <p class="kpi-trend text-green-600">Target: 7.0% - 9.0%</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-leaf text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Farmers Impacted (Est.)</p>
+                        </div>
+                        <p class="kpi-value">2,100+</p> </div>
+                    <p class="kpi-trend text-gray-500">Through funded assets</p>
+                </div>
+                <div class="kpi-card">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="ph ph-chart-pie-slice text-orange-600 text-xl mr-2"></i>
+                            <p class="kpi-label">Portfolio Risk Rating</p>
+                        </div>
+                        <p class="kpi-value">Moderate</p>
+                    </div>
+                    <p class="kpi-trend text-gray-500">Diversified by asset & region</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3 sm:mb-0">Investment Portfolio Details</h3>
+                    <div class="filter-bar">
+                        <select class="sm:w-auto w-full" id="filter-region">
+                            <option value="">All Regions</option>
+                            <option value="east_africa">East Africa</option>
+                            <option value="west_africa">West Africa</option>
+                            <option value="southern_africa">Southern Africa</option>
+                            <option value="central_africa">Central Africa</option>
+                        </select>
+                        <select class="sm:w-auto w-full" id="filter-provider">
+                            <option value="">All Finance Partners</option>
+                            <option value="fp1">Africa Growth Funders</option>
+                            <option value="fp2">Sahel Capital Partners</option>
+                            <option value="fp3">ImpactVest Africa</option>
+                        </select>
+                         <select class="sm:w-auto w-full" id="filter-tranche">
+                            <option value="">All Investment Tranches</option>
+                            <option value="t1">Tranche PA2024-A1</option>
+                            <option value="t2">Tranche PA2023-B2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Investment ID / Tranche</th>
+                                <th>Finance Partner</th>
+                                <th>Region</th>
+                                <th>Capital Deployed (USD)</th>
+                                <th>Current Value (USD)</th>
+                                <th>Return (YTD)</th>
+                                <th>Risk Rating</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PA2024-A1</td>
+                                <td>Africa Growth Funders</td>
+                                <td>East Africa</td>
+                                <td>2,500,000</td> <td>2,650,000</td> <td>9.0%</td>
+                                <td><span class="status-performing">Performing</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>PA2023-B2</td>
+                                <td>Sahel Capital Partners</td>
+                                <td>West Africa</td>
+                                <td>1,800,000</td> <td>1,890,000</td> <td>7.5%</td>
+                                <td><span class="status-watch">Watch</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>PA2024-C1</td>
+                                <td>Africa Growth Funders</td>
+                                <td>Southern Africa</td>
+                                <td>3,000,000</td> <td>3,120,000</td> <td>8.0% (Proj.)</td>
+                                <td><span class="status-performing">Performing</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                             <tr>
+                                <td>PA2023-A3</td>
+                                <td>ImpactVest Africa</td>
+                                <td>East Africa</td>
+                                <td>1,000,000</td> <td>950,000</td>   <td>-5.0%</td>
+                                <td><span class="status-underperforming">Underperforming</span></td>
+                                <td><a href="#" class="text-orange-600 hover:underline text-sm font-medium">View Details</a></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+                 <div class="mt-6 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                          Previous
+                        </a>
+                        <a href="#" aria-current="page" class="relative z-10 inline-flex items-center px-4 py-2 border border-orange-500 bg-orange-50 text-sm font-medium text-orange-600">1</a>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                          Next
+                        </a>
+                      </nav>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Impact Metrics & Reporting</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-3">Key Impact Highlights (Aggregated)</h4>
+                        <ul class="space-y-3 text-sm text-gray-600">
+                            <li class="flex items-center">
+                                <i class="ph ph-tractor text-orange-500 mr-2 text-lg"></i>
+                                <span><strong class="text-gray-800">800+</strong> Tractors & Major Assets Financed</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ph ph-person-simple-walk text-orange-500 mr-2 text-lg"></i>
+                                <span><strong class="text-gray-800">~10,000</strong> Livelihoods Supported (Family Members)</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ph ph-chart-line-up text-orange-500 mr-2 text-lg"></i>
+                                <span>Avg. <strong class="text-gray-800">25-30%</strong> Reported Increase in Farmer Productivity</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="ph ph-map-pin text-orange-500 mr-2 text-lg"></i>
+                                <span>Operations in <strong class="text-gray-800">5</strong> African Countries (e.g., Zambia, Kenya, Ghana)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-700 mb-3">Download Reports</h4>
+                        <div class="space-y-3">
+                            <a href="#" class="report-link">
+                                <i class="ph ph-file-arrow-down"></i>
+                                Quarterly Financial Statement
+                            </a>
+                            <a href="#" class="report-link">
+                                <i class="ph ph-presentation-chart"></i>
+                                Annual Impact Report
+                            </a>
+                            <a href="#" class="report-link">
+                                <i class="ph ph-folder-simple-dashed"></i>
+                                Due Diligence Pack
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="text-center py-8 text-sm text-gray-500 border-t border-gray-200 mt-8">
+            &copy; 2025 Agri-Access. All rights reserved. <br>
+            Capital Provider Portal
+        </footer>
+    </div>
+
+    <script>
+        // Placeholder for any future JavaScript interactions
+        console.log("Capital Provider Dashboard Loaded - USD & Pan-African Update");
+        // Basic filter functionality (example - would need actual data handling)
+        const filterRegion = document.getElementById('filter-region');
+        const filterProvider = document.getElementById('filter-provider');
+        const filterTranche = document.getElementById('filter-tranche');
+        const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+        function applyFilters() {
+            const regionValue = filterRegion.value.toLowerCase();
+            const providerValue = filterProvider.value.toLowerCase();
+            const trancheValue = filterTranche.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const rowRegion = row.cells[2].textContent.toLowerCase();
+                const rowProvider = row.cells[1].textContent.toLowerCase();
+                const rowTranche = row.cells[0].textContent.toLowerCase();
+                
+                let showRow = true;
+
+                if (regionValue && !rowRegion.includes(regionValue.replace(/_/g, ' '))) {
+                    showRow = false;
+                }
+                // This is a simplified provider filter. In a real app, you'd match against an ID or a more robust string.
+                if (providerValue && !rowProvider.includes(providerValue.substring(0,5))) { // Example: "fp1" vs "Finance Provider Alpha"
+                     // A more robust solution would be needed here, this is just illustrative
+                    if (providerValue === "fp1" && !rowProvider.includes("alpha")) showRow = false;
+                    if (providerValue === "fp2" && !rowProvider.includes("sahel")) showRow = false;
+                    if (providerValue === "fp3" && !rowProvider.includes("impactvest")) showRow = false;
+                }
+                if (trancheValue && !rowTranche.includes(trancheValue)) {
+                    showRow = false;
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+
+        if(filterRegion) filterRegion.addEventListener('change', applyFilters);
+        if(filterProvider) filterProvider.addEventListener('change', applyFilters);
+        if(filterTranche) filterTranche.addEventListener('change', applyFilters);
+
+    </script>
+</body>
+</html>
