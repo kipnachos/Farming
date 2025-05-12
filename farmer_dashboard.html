@@ -3,436 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agri-Access: Farmer Dashboard (Zambia)</title>
+    <title>Agri-Access: Farmer Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap" rel="stylesheet"> {/* Added Raleway for placeholder */}
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f9fafb; 
+            background-color: #f4f5f7; /* Lighter, more neutral background */
+            color: #1f2937; /* Darker base text color (Gray-800) */
         }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem; 
-            margin-bottom: 1.5rem; 
+        .app-header {
+            background-color: #ffffff; /* White header */
+            border-bottom: 1px solid #e5e7eb; /* Subtle border */
+            padding: 0.75rem 1.5rem; /* 12px 24px */
+            margin-bottom: 1.5rem; /* 24px */
         }
-        .button-primary {
-            background-color: #f97316; /* Orange-500 */
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem; 
-            transition: background-color 0.3s ease;
-        }
-        .button-primary:hover {
-            background-color: #ea580c; /* Orange-600 */
-        }
-        .button-secondary {
-            background-color: #fed7aa; /* Orange-200 */
-            color: #c2410c; /* Orange-700 */
-            font-weight: 500;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem; 
-            border: 1px solid #fdba74; /* Orange-300 */
-            transition: background-color 0.3s ease;
-        }
-        .button-secondary:hover {
-            background-color: #fdba74; /* Orange-300 */
-        }
-        .button-tertiary {
-            background-color: #fff7ed; /* Orange-50 */
-            color: #c2410c; /* Orange-700 */
-            font-weight: 500;
-            padding: 0.5rem 1rem; /* Smaller padding */
-            border-radius: 0.5rem; 
-            border: 1px solid #fed7aa; /* Orange-200 */
-            transition: background-color 0.3s ease;
-            font-size: 0.875rem; /* 14px */
-        }
-        .button-tertiary:hover {
-            background-color: #fee2e2; /* Orange-100 for hover */
-        }
-        .progress-bar-bg {
-            background-color: #fed7aa; /* Orange-200 */
-            border-radius: 0.25rem; 
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            background-color: #f97316; /* Orange-500 */
-            height: 100%;
-            border-radius: 0.25rem; 
-            transition: width 0.5s ease-in-out;
-        }
-        .icon {
-            font-size: 1.5rem; 
-            margin-right: 0.75rem; 
-        }
-        .header {
-            background-color: #ea580c; /* Orange-600 */
-            color: white;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-        }
-        .header h1 {
-            font-size: 1.5rem; 
+        .app-header .logo-text {
+            color: #dd6b20; /* Darker Orange for logo text (custom) */
+            font-size: 1.5rem; /* 24px */
             font-weight: 700;
             margin-left: 0.5rem;
         }
         .logo-svg {
             width: 32px;
             height: 32px;
+            color: #dd6b20; /* Darker Orange */
+        }
+        .user-menu svg, .user-menu i { /* Ensure i tags also get styled if used for icons */
+            color: #4b5563; /* Gray-600 */
         }
         .flag-svg {
-            width: 28px; 
-            height: 20px; 
+            width: 24px; 
+            height: 16px; 
             border-radius: 2px;
-            border: 1px solid #e5e7eb; 
+            border: 1px solid #d1d5db; 
             margin-left: 0.75rem; 
         }
+        .main-content {
+            padding: 0 1.5rem; /* Add horizontal padding to content area */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.5rem; /* 8px - slightly less rounded */
+            border: 1px solid #e5e7eb; /* Subtle border for cards */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Softer shadow */
+            padding: 1.25rem; /* 20px */
+            margin-bottom: 1.5rem; 
+        }
+        .card-title {
+            font-size: 1.125rem; /* 18px */
+            font-weight: 600;
+            color: #1f2937; /* Gray-800 */
+            margin-bottom: 1rem; /* 16px */
+            display: flex;
+            align-items: center;
+        }
+        .card-title i {
+            margin-right: 0.5rem; /* 8px */
+            color: #f97316; /* Primary Orange for icons in titles */
+            font-size: 1.25rem; /* 20px */
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            padding: 0.625rem 1.25rem; 
+            border-radius: 0.375rem; 
+            transition: all 0.2s ease-in-out;
+            font-size: 0.875rem; 
+            border: 1px solid transparent;
+        }
+        .btn-primary { background-color: #f97316; color: white; border-color: #f97316; }
+        .btn-primary:hover { background-color: #ea580c; border-color: #ea580c; }
+        .btn-secondary { background-color: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+        .btn-secondary:hover { background-color: #fed7aa; }
+        .btn-tertiary { background-color: #f3f4f6; color: #374151; border-color: #d1d5db; }
+        .btn-tertiary:hover { background-color: #e5e7eb; }
+        .btn i { margin-right: 0.375rem; }
+
+        /* Circular Progress Dial */
+        .progress-dial-container {
+            position: relative;
+            width: 120px; 
+            height: 120px;
+            margin: 0 auto 1rem; 
+        }
+        .progress-dial-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        .progress-dial-bg {
+            fill: none;
+            stroke: #e5e7eb; /* Gray-200 */
+        }
+        .progress-dial-fg {
+            fill: none;
+            stroke: #f97316; /* Orange-500 */
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+        .progress-dial-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600;
+            color: #f97316; /* Orange-500 */
+        }
+         .progress-dial-label {
+            text-align: center;
+            font-size: 0.75rem; /* 12px */
+            color: #6b7280; /* Gray-500 */
+            margin-top: -0.25rem; /* Adjust label position */
+        }
+        
         .status-paid { color: #059669; background-color: #d1fae5; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
         .status-due { color: #a16207; background-color: #fef3c7; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
         .status-overdue { color: #dc2626; background-color: #fee2e2; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; }
-        .asset-feature-icon { font-size: 1.25rem; margin-right: 0.5rem; }
-        .graph-container { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; }
-        .graph-bar-bg { background-color: #fed7aa; border-radius: 0.25rem; height: 1.25rem; display: flex; align-items: center; }
-        .graph-bar-fill { background-color: #f97316; height: 100%; border-radius: 0.25rem; text-align: right; padding-right: 0.5rem; color: white; font-size: 0.75rem; line-height: 1.25rem; white-space: nowrap; overflow: hidden; transition: width 0.5s ease-in-out; }
-        .graph-label { font-size: 0.875rem; color: #4b5563; width: 5rem; text-align: right; padding-right: 0.75rem; }
-        .business-plan-table th, .business-plan-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e7eb; font-size: 0.875rem; }
-        .business-plan-table th { background-color: #f9fafb; text-align: left; font-weight: 500; color: #374151; }
-        .support-link { display: block; padding: 0.75rem; background-color: #fff7ed; border: 1px solid #fed7aa; color: #c2410c; border-radius: 0.375rem; transition: background-color 0.3s ease; font-weight: 500; }
-        .support-link:hover { background-color: #fed7aa; }
-        .info-box {
-            background-color: #fffbeb; /* Yellow-50 */
-            border: 1px solid #fef08a; /* Yellow-200 */
-            padding: 0.75rem;
+
+        .info-box { background-color: #eff6ff; border: 1px solid #bfdbfe; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; color: #1e40af; margin-top: 0.75rem; }
+        .info-box strong { color: #1c3baa; }
+        .text-muted { color: #6b7280; }
+        .text-value { color: #1f2937; font-weight: 500; }
+        .text-highlight { color: #f97316; font-weight: 600; }
+        
+        .data-table { min-width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 0.75rem 1rem; text-align: left; font-size: 0.875rem; border-bottom: 1px solid #e5e7eb; }
+        .data-table th { background-color: #f9fafb; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.05em; }
+        .data-table tbody tr:hover { background-color: #f9fafb; }
+
+        /* Payment History Graph Styles */
+        .graph-container { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; }
+        .graph-bar-bg { background-color: #e5e7eb; border-radius: 0.25rem; height: 1rem; display: flex; align-items: center; }
+        .graph-bar-fill { background-color: #f97316; height: 100%; border-radius: 0.25rem; text-align: right; padding-right: 0.5rem; color: white; font-size: 0.625rem; line-height: 1rem; white-space: nowrap; overflow: hidden; transition: width 0.5s ease-in-out; }
+        .graph-label { font-size: 0.75rem; color: #4b5563; width: 4rem; text-align: right; padding-right: 0.5rem; }
+
+        /* Business Snapshot Graph Styles */
+        .snapshot-graph-container {
+            margin-top: 1.5rem; /* 24px */
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb; /* Gray-200 */
+        }
+        .bar-chart-svg {
+            width: 100%;
+            max-width: 300px; /* Max width for the bar chart */
+            height: auto;
+            margin: 0 auto; /* Center the bar chart */
+        }
+        .line-graph-svg {
+            width: 100%;
+            height: 200px; /* Fixed height for line graph */
+            border: 1px solid #d1d5db; /* Gray-300 for border */
             border-radius: 0.375rem; /* 6px */
-            font-size: 0.875rem; /* 14px */
-            color: #854d0e; /* Yellow-800 */
-            margin-top: 0.75rem;
         }
-        .info-box strong {
-            color: #713f12; /* Yellow-900 */
-        }
+        /* Removed .asset-image-grid and .asset-image-item as they are no longer needed */
 
         @media (max-width: 640px) {
+            .app-header { padding: 0.75rem 1rem; }
+            .app-header .logo-text { font-size: 1.25rem; }
+            .main-content { padding: 0 1rem; }
             .card { padding: 1rem; }
-            .header { padding: 0.75rem 1rem; }
-            .header h1 { font-size: 1.25rem; }
-            .logo-svg { width: 28px; height: 28px; }
-            .flag-svg { width: 24px; height: 16px; }
-            .button-primary, .button-secondary { width: 100%; margin-bottom: 0.5rem; }
-            .asset-controls button { width: calc(50% - 0.25rem); }
-            .graph-label { width: 4rem; font-size: 0.75rem; padding-right: 0.5rem;}
-            .graph-bar-fill { font-size: 0.625rem; } 
+            .card-title { font-size: 1rem; margin-bottom: 0.75rem;}
+            .btn { width: 100%; margin-bottom: 0.5rem; }
+            .flex-col-mobile { flex-direction: column; }
+            .flex-col-mobile > .btn { width: 100%; }
+            .flex-col-mobile > .btn + .btn { margin-left: 0; } /* Remove margin for stacked buttons */
+            .progress-dial-container { width: 100px; height: 100px; } 
+            .progress-dial-text { font-size: 1.25rem; }
+            .bar-chart-svg { max-width: 100%; } /* Full width on mobile */
+            .cashflow-buttons-container .btn { margin-bottom: 0.5rem; } /* Ensure spacing for stacked buttons */
+            .cashflow-buttons-container .btn:last-child { margin-bottom: 0; }
+            .my-asset-grid { grid-template-columns: 1fr; } /* Stack image and details on mobile */
+            .my-asset-grid > div:first-child { margin-bottom: 1rem; } /* Add space below details on mobile when stacked */
+            .welcome-message-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start; /* Align items to start on mobile */
+            }
+            .star-rating { margin-top: 0.25rem; } /* Add some space above stars on mobile */
         }
     </style>
 </head>
 <body class="antialiased">
     <div class="min-h-screen">
-        <div class="header">
+        <header class="app-header">
             <div class="container mx-auto flex justify-between items-center w-full">
                 <div class="flex items-center">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10ZM50 75C36.1929 75 25 63.8071 25 50C25 36.1929 36.1929 25 50 25C63.8071 25 75 36.1929 75 50C75 63.8071 63.8071 75 50 75Z"/>
                         <path d="M50 40L65 60H35L50 40Z" />
                     </svg>
-                    <h1>Agri-Access</h1>
+                    <span class="logo-text">Agri-Access</span>
                 </div>
-                <div class="flex items-center">
-                    <i class="ph ph-user text-2xl"></i>
-                    <svg class="flag-svg ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+                <div class="flex items-center user-menu">
+                    <i class="ph ph-bell text-xl"></i>
+                    <svg class="flag-svg ml-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
                         <rect width="900" height="600" fill="#198a00"/>
                         <rect width="300" height="300" x="600" y="0" fill="#000000"/>
                         <rect width="300" height="300" x="600" y="300" fill="#de2010"/>
                         <rect width="300" height="600" x="300" y="0" fill="#ef7d00"/>
                         <path d="M750 150 l22.5 67.5h-75l52.5-45-30-75z" fill="#ef7d00"/>
                     </svg>
+                    <i class="ph ph-user-circle text-2xl ml-3"></i>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <div class="container mx-auto p-4">
-            <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 text-orange-700 rounded-md">
-                <p class="font-semibold">Welcome back, Farmer Kofi!</p>
-                <p>Your Agri-Access Hub for Zambia.</p>
+        <main class="container mx-auto main-content">
+            <div class="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 text-orange-700 rounded-md welcome-message-container">
+                <div>
+                    <p class="font-semibold">Welcome back, Farmer Martin Yango!</p>
+                    <p class="text-sm">Your Agri-Access Hub for Zambia.</p>
+                </div>
+                <div class="star-rating mt-1 sm:mt-0 sm:ml-auto"> <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph ph-star"></i> </div>
             </div>
 
             <div class="card">
-                <div class="flex items-center mb-4">
-                    <i class="ph ph-tractor icon text-orange-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">My Asset: Massey Ferguson MF375</h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <img src="https://placehold.co/600x400/fb923c/ffffff?text=Massey+Ferguson+MF375" alt="Massey Ferguson MF375 Tractor Image" class="rounded-lg shadow-md w-full h-auto object-cover" onerror="this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Not+Available'; this.onerror=null;">
-                    </div>
-                    <div class="space-y-3">
-                        <p class="text-gray-600"><strong class="text-gray-700">Model:</strong> MF375 Tractor</p>
-                        <p class="text-gray-600"><strong class="text-gray-700">Acquisition Date:</strong> 2024-01-15</p>
-                        <p class="text-gray-600"><strong class="text-gray-700">Supplier:</strong> AgriEquip Zambia Ltd.</p>
-                        <p class="text-gray-600"><strong class="text-gray-700">Loan ID:</strong> AA-ZM-00123</p>
+                <h3 class="card-title"><i class="ph ph-tractor"></i>My Asset & Condition: Massey Ferguson MF375</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-asset-grid"> 
+                    <div class="space-y-2 text-sm"> 
+                        <p><span class="text-muted">Model:</span> <span class="text-value">MF375 Tractor</span></p>
+                        <p><span class="text-muted">Acquisition Date:</span> <span class="text-value">2024-01-15</span></p>
+                        <p><span class="text-muted">Supplier:</span> <span class="text-value">AgriEquip Zambia Ltd.</span></p>
+                        <p><span class="text-muted">Lease ID:</span> <span class="text-value">AA-ZM-00123</span></p>
                         
-                        <div class="mt-4 pt-4 border-t border-gray-200 space-y-3">
-                            <div class="flex items-center text-gray-600">
-                                <i class="ph ph-satellite asset-feature-icon text-orange-500"></i>
-                                <strong class="text-gray-700 mr-2">Tracking Status:</strong> Active (StarLink)
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <i class="ph ph-shield-check asset-feature-icon text-orange-500"></i>
-                                <strong class="text-gray-700 mr-2">Remote Lock:</strong> Engaged
-                            </div>
-                            <div class="flex space-x-2 mt-2 asset-controls">
-                                <button class="text-xs bg-green-100 hover:bg-green-200 text-green-700 font-medium py-1 px-3 rounded-md flex items-center justify-center transition duration-150">
-                                    <i class="ph ph-lock-open-thin mr-1"></i>Unlock Asset
-                                </button>
-                                <button class="text-xs bg-red-100 hover:bg-red-200 text-red-700 font-medium py-1 px-3 rounded-md flex items-center justify-center transition duration-150">
-                                    <i class="ph ph-lock-thin mr-1"></i>Lock Asset
-                                </button>
+                        <div class="mt-3 pt-3 border-t border-gray-200 space-y-3">
+                            <div class="flex items-center"><i class="ph ph-satellite text-orange-500 mr-2"></i> <span class="text-muted">Tracking:</span> <span class="text-value">Active (StarLink)</span></div>
+                            <div class="flex items-center"><i class="ph ph-shield-check text-orange-500 mr-2"></i> <span class="text-muted">Remote Lock:</span> <span class="text-value">Engaged</span></div>
+                            <div class="flex space-x-2 mt-2">
+                                <button class="btn btn-tertiary text-xs py-1 px-2"><i class="ph ph-lock-open-thin"></i>Unlock</button>
+                                <button class="btn btn-tertiary text-xs py-1 px-2"><i class="ph ph-lock-thin"></i>Lock</button>
                             </div>
                         </div>
-                         <a href="#" class="text-sm text-orange-600 hover:underline block mt-3">View Asset Details & Documents</a>
+                         <a href="#" class="text-sm text-orange-600 hover:underline block mt-4 font-medium">View Full Asset Details & Documents <i class="ph ph-arrow-right text-xs"></i></a>
+                    </div>
+                    <div> 
+                        <div>
+                            <p class="text-sm text-muted mb-1">Latest Overall Condition Picture:</p>
+                            <img src="https://placehold.co/600x338/fb923c/ffffff?text=Latest+Overall+Condition&font=inter" alt="Latest overall asset condition picture" class="rounded-lg shadow-sm w-full h-auto object-cover mb-2" onerror="this.src='https://placehold.co/600x338/cccccc/333333?text=No+Image+Uploaded'; this.onerror=null;">
+                            <div class="flex flex-col sm:flex-row justify-between items-center text-xs mb-3">
+                                <span class="text-muted mb-1 sm:mb-0">Uploaded on: 2025-04-15</span>
+                                <label for="overallAssetPictureUpload" class="btn btn-primary cursor-pointer text-xs py-1 px-3">
+                                    <i class="ph ph-camera-plus"></i> Upload Overall Picture
+                                </label>
+                                <input type="file" id="overallAssetPictureUpload" class="hidden" accept="image/*" capture="environment">
+                            </div>
+                        </div>
+                        <p class="text-xs text-muted mt-1">Please upload a clear picture of your asset's overall condition monthly using your phone's camera.</p>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="flex items-center mb-3">
-                    <i class="ph ph-chart-line-up icon text-orange-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">Rent-to-Own Progress & Benefits</h2>
+                <h3 class="card-title"><i class="ph ph-chart-pie"></i>Rent-to-Own Progress</h3>
+                 <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <div class="progress-dial-container">
+                        <svg class="progress-dial-svg" viewBox="0 0 36 36">
+                            <path class="progress-dial-bg" stroke-width="3.5" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                            <path id="ownershipProgressDialFG" class="progress-dial-fg" stroke-width="3.5" stroke-dasharray="45, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                        </svg>
+                        <div id="ownershipProgressDialText" class="progress-dial-text">45%</div>
+                    </div>
+                    <div class="flex-1 text-sm">
+                        <p class="mb-1">You are <span class="text-highlight">45%</span> towards owning your asset.</p>
+                        <div class="flex justify-between text-xs text-muted mb-1">
+                            <span>Total Paid: ZMW 218,250.00</span> 
+                        </div>
+                        <div class="flex justify-between text-xs text-muted mb-3">
+                            <span>Remaining to Own: ZMW 266,750.00</span> 
+                        </div>
+                        <p class="text-xs text-muted">Total Rent-to-Own Value: ZMW 485,000.00 (Illustrative total cost)</p>
+                        <p class="text-xs text-muted mt-1">Illustrative Total Term: 36 Months (18 Months Remaining)</p>
+                    </div>
                 </div>
-                <p class="text-gray-600 mb-1">You are <strong class="text-orange-600">45%</strong> towards owning your asset.</p>
-                <div class="progress-bar-bg w-full h-4 mb-2">
-                    <div class="progress-bar-fill" style="width: 45%;"></div>
-                </div>
-                <div class="flex justify-between text-sm text-gray-500">
-                    <span>Total Paid: ZMW 218,250.00</span> 
-                    <span>Remaining to Own: ZMW 266,750.00</span> 
-                </div>
-                <p class="text-xs text-gray-500 mt-1">Total Rent-to-Own Value: ZMW 485,000.00 (Illustrative total cost including interest over full term)</p>
 
-                <div class="info-box mt-4">
-                    <i class="ph ph-info mr-1"></i> <strong>Understanding Rent-to-Own:</strong> Your payments are like rent that contributes towards owning the asset at the end of the agreed term. This is not direct equity you can withdraw before completing the term, but consistent payments unlock benefits.
+                <div class="info-box mt-3">
+                    <i class="ph ph-info mr-1"></i> <strong>Understanding Rent-to-Own:</strong> Your payments contribute towards owning the asset. Consistent payments unlock benefits. This is not direct equity you can withdraw before completing the term.
                 </div>
 
                 <div class="mt-4 pt-4 border-t border-gray-200">
-                    <h3 class="text-md font-semibold text-gray-700 mb-2">Early Payment Benefits:</h3>
-                    <p class="text-sm text-gray-600">Making extra payments or settling your agreement early can reduce the total amount of interest you pay over the loan term.</p>
-                    <p class="text-sm text-green-600 font-medium mt-1">Example: Paying an extra ZMW 5,000 now could save you approximately ZMW 800 in future interest (illustrative).</p>
-                    <button class="button-tertiary mt-3">
-                        <i class="ph ph-calculator mr-1"></i> Estimate Early Settlement Savings
+                    <h4 class="text-sm font-semibold text-gray-700 mb-1">Early Payment Benefits:</h4>
+                    <p class="text-xs text-muted">Making extra payments can reduce the total interest paid and help you own your asset sooner.</p>
+                    <p class="text-xs text-green-600 font-medium mt-1">Example: An extra ZMW 5,000 now could save approx. ZMW 800 in future interest.</p>
+                    <button class="btn btn-secondary text-xs mt-2 py-1 px-2">
+                        <i class="ph ph-calculator"></i> Estimate Savings
                     </button>
                 </div>
             </div>
             
             <div class="card">
-                <div class="flex items-center mb-3">
-                    <i class="ph ph-arrows-clockwise icon text-orange-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">Financial Flexibility Options</h2>
+                <h3 class="card-title"><i class="ph ph-calendar-check"></i>Next Payment Due</h3>
+                <div class="bg-orange-50 p-3 rounded-md border border-orange-200 mb-3">
+                    <p class="text-xl font-bold text-orange-600">ZMW 2,500.00 - ZMW 3,500.00 <span class="text-xs font-normal text-orange-500">(Variable)</span></p>
+                    <p class="text-sm text-muted">Due Date: <span class="text-value">2025-05-25</span> (16 days remaining)</p>
+                    <p class="text-xs text-muted mt-1">Final amount confirmed 7 days before due date.</p>
                 </div>
-                <p class="text-sm text-gray-600 mb-3">
-                    Consistent good payment history and reaching certain milestones in your Rent-to-Own agreement can unlock valuable financial flexibilities. These are not equity withdrawals but benefits to help you manage your finances.
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 flex-col-mobile">
+                    <button class="btn btn-primary flex-1">
+                        <i class="ph ph-wallet"></i>Make Regular Payment
+                    </button>
+                    <button class="btn btn-secondary flex-1">
+                        <i class="ph ph-arrow-fat-lines-up"></i>Make Extra Payment
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title"><i class="ph ph-arrows-clockwise"></i>Financial Flexibility Options</h3>
+                <p class="text-xs text-muted mb-3">
+                    Good payment history can unlock benefits to help manage your finances. Terms and conditions apply.
                 </p>
                 <div class="space-y-3">
                     <div>
-                        <h4 class="font-semibold text-gray-700">Payment Holiday Request</h4>
-                        <p class="text-xs text-gray-500">If you've paid over 60% of your asset value, you may be eligible to apply for a short payment holiday in times of unexpected hardship. Terms and conditions apply.</p>
-                        <button class="button-tertiary mt-1" disabled> <i class="ph ph-calendar-x mr-1"></i> Request Payment Holiday (Not Yet Eligible)
+                        <h4 class="font-medium text-gray-700 text-sm">Payment Holiday Request</h4>
+                        <p class="text-xs text-muted">Eligible after 60% paid. For unexpected hardship.</p>
+                        <button class="btn btn-tertiary text-xs mt-1 py-1 px-2" disabled>
+                           <i class="ph ph-calendar-x"></i> Request Holiday (Not Yet Eligible)
                         </button>
                     </div>
                     <div>
-                        <h4 class="font-semibold text-gray-700">Temporary Payment Reduction</h4>
-                        <p class="text-xs text-gray-500">After 12 months of on-time payments, you might qualify to temporarily reduce your payment amount (this may extend your final ownership date).</p>
-                         <button class="button-tertiary mt-1">
-                           <i class="ph ph-trend-down mr-1"></i> Explore Payment Reduction
-                        </button>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-gray-700">Supplementary Micro-Loan Access</h4>
-                        <p class="text-xs text-gray-500">Farmers with excellent payment records for over 18 months may be pre-qualified for small, short-term supplementary loans for urgent farm needs. (Subject to availability and separate terms).</p>
-                         <button class="button-tertiary mt-1" disabled>
-                           <i class="ph ph-money mr-1"></i> Check Eligibility (Coming Soon)
+                        <h4 class="font-medium text-gray-700 text-sm">Temporary Payment Reduction</h4>
+                        <p class="text-xs text-muted">Eligible after 12 months on-time payments.</p>
+                         <button class="btn btn-tertiary text-xs mt-1 py-1 px-2">
+                           <i class="ph ph-trend-down"></i> Explore Reduction
                         </button>
                     </div>
                 </div>
-                <p class="text-xs text-gray-500 mt-4">Note: Eligibility for these options depends on your specific loan agreement, payment history, and platform policies. Always check the terms carefully.</p>
-            </div>
-
-
-            <div class="card">
-                <div class="flex items-center mb-3">
-                    <i class="ph ph-calendar-check icon text-orange-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">Next Payment Due</h2>
-                </div>
-                <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                    <p class="text-2xl font-bold text-orange-600">ZMW 2,500.00 - ZMW 3,500.00 (Variable)</p>
-                    <p class="text-gray-600">Due Date: <strong class="text-gray-700">2025-05-25</strong> (16 days remaining)</p>
-                    <p class="text-sm text-gray-500 mt-1">Your payment amount varies based on recent rainfall and market prices. The final amount will be confirmed 7 days before the due date.</p>
-                </div>
-                <div class="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                    <button class="button-primary flex items-center justify-center">
-                        <i class="ph ph-wallet mr-2"></i>Make Regular Payment
-                    </button>
-                    <button class="button-secondary flex items-center justify-center">
-                        <i class="ph ph-arrow-fat-lines-up mr-2"></i>Make Extra Payment
-                    </button>
-                </div>
-                 <p class="text-xs text-gray-500 mt-3">Need help? <a href="#" class="text-orange-600 hover:underline">Contact Support</a></p>
             </div>
 
             <div class="card">
-                <div class="flex items-center mb-3">
-                    <i class="ph ph-list-checks icon text-gray-500"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">Payment History</h2>
-                </div>
-                <div class="overflow-x-auto mb-4">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount (ZMW)</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
-                            </tr>
+                <h3 class="card-title"><i class="ph ph-list-checks"></i>Payment History</h3>
+                <div class="overflow-x-auto mb-3">
+                    <table class="data-table w-full">
+                        <thead>
+                            <tr><th>Date</th><th>Amount (ZMW)</th><th>Status</th><th>ID</th></tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2025-04-20</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">3,000.00</td>
-                                <td class="px-4 py-3 whitespace-nowrap"><span class="status-paid">Paid</span></td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">TXN7890123</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2025-03-18</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2,800.00</td>
-                                <td class="px-4 py-3 whitespace-nowrap"><span class="status-paid">Paid</span></td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">TXN6543210</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2025-02-15</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">2,200.00</td>
-                                <td class="px-4 py-3 whitespace-nowrap"><span class="status-paid">Paid</span></td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">TXN1234567</td>
-                            </tr>
+                        <tbody>
+                            <tr><td>2025-04-20</td><td>3,000.00</td><td><span class="status-paid">Paid</span></td><td>TXN7890123</td></tr>
+                            <tr><td>2025-03-18</td><td>2,800.00</td><td><span class="status-paid">Paid</span></td><td>TXN6543210</td></tr>
+                            <tr><td>2025-02-15</td><td>2,200.00</td><td><span class="status-paid">Paid</span></td><td>TXN1234567</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-2 mb-4">
-                    <a href="#" class="text-sm text-orange-600 hover:underline">View All Payments</a>
-                </div>
-
+                <a href="#" class="text-sm text-orange-600 hover:underline font-medium">View All Payments <i class="ph ph-arrow-right text-xs"></i></a>
+                
                 <div class="graph-container">
-                    <h3 class="text-lg font-medium text-gray-700 mb-3">Recent Payment Trend (ZMW)</h3>
-                    <div class="space-y-2">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2">Recent Payment Trend (ZMW)</h4>
+                    <div class="space-y-1">
                         <div class="flex items-center">
                             <span class="graph-label">Feb '25</span>
                             <div class="graph-bar-bg flex-1">
-                                <div class="graph-bar-fill" style="width: 55%;">2,200</div> 
+                                <div class="graph-bar-fill" style="width: 55%;">2,200</div>
                             </div>
                         </div>
                         <div class="flex items-center">
                             <span class="graph-label">Mar '25</span>
                             <div class="graph-bar-bg flex-1">
-                                <div class="graph-bar-fill" style="width: 70%;">2,800</div> 
+                                <div class="graph-bar-fill" style="width: 70%;">2,800</div>
                             </div>
                         </div>
                         <div class="flex items-center">
                             <span class="graph-label">Apr '25</span>
                             <div class="graph-bar-bg flex-1">
-                                <div class="graph-bar-fill" style="width: 75%;">3,000</div> 
+                                <div class="graph-bar-fill" style="width: 75%;">3,000</div>
                             </div>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">Graph shows approximate payment amounts.</p>
                 </div>
             </div>
 
             <div class="card">
-                <div class="flex items-center mb-4">
-                    <i class="ph ph-chart-pie-slice icon text-orange-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">My Farm Business Snapshot</h2>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <h3 class="card-title"><i class="ph ph-chart-pie-slice"></i>My Farm Business Snapshot</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                     <div>
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">Projected Income (Next 6 Months)</h3>
-                        <table class="min-w-full business-plan-table">
-                            <thead>
-                                <tr><th>Source</th><th>Est. Amount (ZMW)</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Maize Sales</td><td>15,000.00</td></tr>
-                                <tr><td>Soyabean Sales</td><td>10,000.00</td></tr>
-                                <tr><td>Vegetable Sales</td><td>5,000.00</td></tr>
-                                <tr class="font-semibold bg-orange-50"><td>Total Est. Income</td><td>30,000.00</td></tr>
-                            </tbody>
-                        </table>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-1">Projected Income (Next 6 Months)</h4>
+                        <ul class="text-xs text-muted space-y-1">
+                            <li>Maize Sales: <span class="text-value">ZMW 15,000.00</span></li>
+                            <li>Soyabean Sales: <span class="text-value">ZMW 10,000.00</span></li>
+                            <li class="font-semibold">Total Est. Income: <span class="text-value">ZMW 30,000.00</span></li>
+                        </ul>
                     </div>
                     <div>
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">Projected Expenses (Next 6 Months)</h3>
-                        <table class="min-w-full business-plan-table">
-                            <thead>
-                                <tr><th>Category</th><th>Est. Amount (ZMW)</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Fertilizer & Seeds</td><td>8,000.00</td></tr>
-                                <tr><td>Fuel & Maintenance</td><td>4,500.00</td></tr>
-                                <tr><td>Labor</td><td>6,000.00</td></tr>
-                                <tr><td>Loan Repayments</td><td>Calculated Separately</td></tr>
-                                <tr class="font-semibold bg-orange-50"><td>Total Est. Expenses</td><td>18,500.00</td></tr>
-                            </tbody>
-                        </table>
+                        <h4 class="text-sm font-semibold text-gray-700 mb-1">Projected Expenses (Next 6 Months)</h4>
+                        <ul class="text-xs text-muted space-y-1">
+                            <li>Fertilizer & Seeds: <span class="text-value">ZMW 8,000.00</span></li>
+                            <li>Fuel & Maintenance: <span class="text-value">ZMW 4,500.00</span></li>
+                            <li class="font-semibold">Total Est. Expenses: <span class="text-value">ZMW 18,500.00</span></li>
+                        </ul>
                     </div>
                 </div>
-
-                <div class="mb-6 p-3 bg-green-50 border border-green-200 rounded-md">
-                     <h3 class="text-md font-semibold text-green-700">Profit/Loss Outlook (Excluding Loan): ZMW 11,500.00 (Est. Profit)</h3>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4 cashflow-buttons-container">
+                    <button class="btn btn-secondary flex-1">
+                        <i class="ph ph-plus-circle"></i> Add Income Entry
+                    </button>
+                    <button class="btn btn-secondary flex-1">
+                        <i class="ph ph-minus-circle"></i> Add Expense Entry
+                    </button>
                 </div>
 
-                <div>
-                    <h3 class="text-lg font-medium text-gray-700 mb-3">Practical Support & Resources</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <a href="#" class="support-link text-center"><i class="ph ph-potted-plant mr-1"></i>Farming Tips</a>
-                        <a href="#" class="support-link text-center"><i class="ph ph-scales mr-1"></i>Market Prices</a>
-                        <a href="#" class="support-link text-center"><i class="ph ph-chats-circle mr-1"></i>Advisor Connect</a>
+                <div class="mb-3 p-2 bg-green-50 border border-green-200 rounded-md text-xs">
+                     <span class="font-semibold text-green-700">Profit/Loss Outlook (Excl. Lease): ZMW 11,500.00 (Est. Profit)</span>
+                </div>
+
+                <div class="snapshot-graph-container">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3 text-center">Income vs. Expenses (Next 6 Months)</h4>
+                    <svg class="bar-chart-svg" viewBox="0 0 200 100" aria-labelledby="barChartTitle" role="img">
+                        <title id="barChartTitle">Bar chart showing projected income versus expenses for the next 6 months.</title>
+                        <rect x="30" y="20" width="40" height="60" fill="#4ade80" rx="2"> <title>Projected Income: ZMW 30,000</title>
+                        </rect>
+                        <text x="50" y="15" font-size="8" fill="#1f2937" text-anchor="middle">Income</text>
+                        <text x="50" y="85" font-size="7" fill="#1f2937" text-anchor="middle">ZMW 30k</text>
+                        
+                        <rect x="130" y="40" width="40" height="40" fill="#f87171" rx="2"> <title>Projected Expenses: ZMW 18,500</title>
+                        </rect>
+                        <text x="150" y="15" font-size="8" fill="#1f2937" text-anchor="middle">Expenses</text>
+                        <text x="150" y="85" font-size="7" fill="#1f2937" text-anchor="middle">ZMW 18.5k</text>
+                        
+                        <line x1="10" y1="80" x2="190" y2="80" stroke="#d1d5db" stroke-width="0.5"/>
+                    </svg>
+                </div>
+
+                <div class="snapshot-graph-container">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2 text-center">Financial Trends (Last 2 Years - Illustrative)</h4>
+                    <svg class="line-graph-svg" viewBox="0 0 300 100" aria-labelledby="lineGraphTitle" role="img">
+                         <title id="lineGraphTitle">Illustrative line graph showing income and expense trends over the last two years.</title>
+                        <text x="5" y="15" font-size="6" fill="#6b7280">High</text>
+                        <text x="5" y="50" font-size="6" fill="#6b7280">Mid</text>
+                        <text x="5" y="85" font-size="6" fill="#6b7280">Low</text>
+                        <line x1="20" y1="10" x2="20" y2="90" stroke="#e5e7eb" stroke-width="0.5"/>
+                        
+                        <text x="40" y="97" font-size="6" fill="#6b7280">Year -2</text>
+                        <text x="150" y="97" font-size="6" fill="#6b7280">Year -1</text>
+                        <text x="260" y="97" font-size="6" fill="#6b7280">Current</text>
+                        <line x1="20" y1="90" x2="280" y2="90" stroke="#e5e7eb" stroke-width="0.5"/>
+
+                        <polyline points="40,40 150,20 260,30" fill="none" stroke="#4ade80" stroke-width="1.5">
+                            <title>Income Trend</title>
+                        </polyline>
+                        <circle cx="260" cy="30" r="2" fill="#4ade80"/>
+                        
+                        <polyline points="40,60 150,50 260,55" fill="none" stroke="#f87171" stroke-width="1.5">
+                            <title>Expense Trend</title>
+                        </polyline>
+                        <circle cx="260" cy="55" r="2" fill="#f87171"/>
+                        
+                        <text x="285" y="33" font-size="5" fill="#4ade80">Income</text>
+                        <text x="285" y="58" font-size="5" fill="#f87171">Expenses</text>
+                    </svg>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2">Practical Support & Resources</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <a href="#" class="btn btn-tertiary text-xs py-2"><i class="ph ph-potted-plant"></i>Farming Tips</a>
+                        <a href="#" class="btn btn-tertiary text-xs py-2"><i class="ph ph-scales"></i>Market Prices</a>
+                        <a href="#" class="btn btn-tertiary text-xs py-2"><i class="ph ph-chats-circle"></i>Advisor Connect</a>
                     </div>
                 </div>
-                 <p class="text-xs text-gray-500 mt-4">This is a simplified snapshot. For detailed planning, consult with an agricultural advisor.</p>
             </div>
+        </main>
 
-            <div class="card">
-                 <div class="flex items-center mb-3">
-                    <i class="ph ph-lightning icon text-gray-500"></i>
-                    <h2 class="text-xl font-semibold text-gray-800">Quick Actions</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <button class="bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 border border-orange-200">
-                        <i class="ph ph-file-text mr-2"></i>View Loan Agreement
-                    </button>
-                    <button class="bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 border border-orange-200">
-                        <i class="ph ph-gear mr-2"></i>Asset Maintenance Log
-                    </button>
-                     <button class="bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center transition duration-150 border border-orange-200">
-                        <i class="ph ph-question mr-2"></i>FAQ & Support
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        <footer class="text-center py-8 text-sm text-gray-500 border-t border-gray-200 mt-8">
-            &copy; 2025 Agri-Access Zambia. All rights reserved. <br>
+        <footer class="text-center py-8 text-xs text-gray-500 border-t border-gray-200 mt-8">
+            &copy; 2025 Agri-Access. All rights reserved. <br>
             Empowering Farmers, Growing Futures.
         </footer>
     </div>
-
     <script>
-        // Placeholder for any future JavaScript interactions
-        console.log("Farmer Dashboard Loaded - Zambia Update (Orange Theme) - MF375 - Financial Features");
+        // Script to update the circular progress dial
+        function setProgressDial(dialSelector, progressPercentage, textValue) {
+            const circumference = 2 * Math.PI * 15.9155; 
+            const dialElement = document.querySelector(dialSelector); 
+            if (dialElement) {
+                const fgPath = dialElement.querySelector('.progress-dial-fg');
+                const textElement = dialElement.querySelector('.progress-dial-text');
+                
+                if (fgPath) {
+                    const offset = circumference - (progressPercentage / 100) * circumference;
+                    fgPath.style.strokeDashoffset = offset;
+                    fgPath.style.strokeDasharray = `${circumference} ${circumference}`;
+                }
+                if (textElement) {
+                    textElement.textContent = textValue;
+                }
+            }
+        }
+
+        // Ownership Progress Dial
+        const ownershipDialContainer = document.querySelector('.card:nth-child(3) .progress-dial-container'); 
+        if(ownershipDialContainer) {
+            setProgressDial(ownershipDialContainer, 45, '45%');
+        }
+
+
+        const fileUploadInputs = document.querySelectorAll('input[type="file"][id$="Upload"]');
+        fileUploadInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    console.log("File selected for " + this.id + ":", this.files[0].name);
+                    alert("Picture '" + this.files[0].name + "' selected for " + this.id + ". (Upload functionality not implemented in prototype)");
+                }
+            });
+        });
     </script>
 </body>
 </html>
